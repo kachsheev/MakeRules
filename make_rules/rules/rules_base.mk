@@ -32,13 +32,10 @@ endif
 	rm -fr $(BUILDPATH)
 
 # build
-build : $(LANG_MAKE_DIRS) build_deps build_obj $(LINK_RULE)
+build : $(LANG_MAKE_DIRS) build_obj $(LINK_RULE)
 	@echo '---> RULE' $@
 
-build_deps : $(LANG_MAKE_DIRS) $(LANG_BUILD_DEPS)
-	@echo '---> RULE' $@
-
-build_obj : build_deps $(LANG_BUILD_OBJ)
+build_obj : $(LANG_BUILD_OBJ)
 	@echo '---> RULE' $@
 
 build_lib : build_obj $(LANG_BUILD_LIB)
@@ -48,17 +45,17 @@ build_bin : build_obj $(LANG_BUILD_BIN)
 	@echo '---> RULE' $@
 
 # clean rules
-clean : clean_deps clean_obj $(CLEAN_RULE) rm_dirs
+clean : rm_dirs
 	@echo '---> RULE' $@
 
-clean_deps : $(LANG_CLEAN_DEPS)
-	@echo '---> RULE' $@
-
-clean_obj : $(LANG_CLEAN_OBJ)
-	@echo '---> RULE' $@
-
-clean_lib :
-	@echo '---> RULE' $@
-
-clean_bin :
-	@echo '---> RULE' $@
+# clean_deps : $(LANG_CLEAN_DEPS)
+# 	@echo '---> RULE' $@
+# 
+# clean_obj : $(LANG_CLEAN_OBJ)
+# 	@echo '---> RULE' $@
+# 
+# clean_lib :
+# 	@echo '---> RULE' $@
+# 
+# clean_bin :
+# 	@echo '---> RULE' $@

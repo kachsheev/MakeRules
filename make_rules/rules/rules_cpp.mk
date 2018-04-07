@@ -22,10 +22,7 @@ endif
 cpp_build: $(LANG_BUILD_RULE)
 	@echo '---> RULE' $@
 	
-cpp_build_deps : $(DEP_FILES)
-	@echo '---> RULE' $@ -- $?
-
-cpp_build_obj : cpp_build_deps $(OBJ_FILES)
+cpp_build_obj : $(OBJ_FILES)
 	@echo '---> RULE' $@ -- $?
 
 cpp_build_lib : cpp_build_obj
@@ -41,39 +38,10 @@ cpp_build_bin : cpp_build_obj
 	@echo '---> RULE' $@
 	$(CMP) $(OBJ_FILES) -o $(BUILDPATH_BIN)/$(NAME)
 	
-$(BUILDPATH_DEP)/%.d : make_dirs $(SOURCE_PATH)/%.cpp
-	@echo '---> RULE' $? : $@
-ifeq ($(CMP_TYPE),gcc)
-	$(CMP) $(CXX_FLAGS_DEP) $(CXX_INCLUDE) $(CXX_FLAGS) $(SOURCE_PATH)/$*.cpp > $(BUILDPATH_DEP)/$*.d
-endif
-ifeq ($(CMP_TYPE),clang)
-endif
-ifeq ($(CMP_TYPE),cl.exe)
-endif
-
-$(BUILDPATH_DEP)/%.d : make_dirs $(SOURCE_PATH)/%.cxx
-	@echo '---> RULE' $< : $@
-ifeq ($(CMP_TYPE),gcc)
-	$(CMP) $(CXX_FLAGS_DEP) $(CXX_INCLUDE) $(CXX_FLAGS) $(SOURCE_PATH)/$*.cpp > $(BUILDPATH_DEP)/$*.d
-endif
-ifeq ($(CMP_TYPE),clang)
-endif
-ifeq ($(CMP_TYPE),cl.exe)
-endif
-
-$(BUILDPATH_DEP)/%.d : make_dirs $(SOURCE_PATH)/%.cc 
-	@echo '---> RULE' $< : $@
-ifeq ($(CMP_TYPE),gcc)
-	$(CMP) $(CXX_FLAGS_DEP) $(CXX_INCLUDE) $(CXX_FLAGS) $(SOURCE_PATH)/$*.cpp > $(BUILDPATH_DEP)/$*.d
-endif
-ifeq ($(CMP_TYPE),clang)
-endif
-ifeq ($(CMP_TYPE),cl.exe)
-endif
-
-$(BUILDPATH_OBJ)/%.o : $(SOURCE_PATH)/%.cpp $(BUILDPATH_DEP)/%.d
+$(BUILDPATH_OBJ)/%.o : $(SOURCE_PATH)/%.cpp
 	@echo '---> RULE' $< : 
 ifeq ($(CMP_TYPE),gcc)
+	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) -c $< -o $@ -MF $(BUILDPATH_DEP)/$*.d
 	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) -c $< -o $@
 endif
 ifeq ($(CMP_TYPE),clang)
@@ -81,9 +49,10 @@ endif
 ifeq ($(CMP_TYPE),cl.exe)
 endif
 
-$(BUILDPATH_OBJ)/%.o : $(SOURCE_PATH)/%.cxx $(BUILDPATH_DEP)/%.d
+$(BUILDPATH_OBJ)/%.o : $(SOURCE_PATH)/%.cxx
 	@echo '---> RULE' $< : $@
 ifeq ($(CMP_TYPE),gcc)
+	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) -c $< -o $@ -MF $(BUILDPATH_DEP)/$*.d
 	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) -c $< -o $@
 endif
 ifeq ($(CMP_TYPE),clang)
@@ -91,9 +60,10 @@ endif
 ifeq ($(CMP_TYPE),cl.exe)
 endif
 
-$(BUILDPATH_OBJ)/%.o : $(SOURCE_PATH)/%.cc $(BUILDPATH_DEP)/%.d
+$(BUILDPATH_OBJ)/%.o : $(SOURCE_PATH)/%.cc
 	@echo '---> RULE' $< : $@
 ifeq ($(CMP_TYPE),gcc)
+	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) -c $< -o $@ -MF $(BUILDPATH_DEP)/$*.d
 	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) -c $< -o $@
 endif
 ifeq ($(CMP_TYPE),clang)
@@ -135,6 +105,6 @@ cpp_clean_lib :
 cpp_clean_bin :
 	@echo '---> RULE' $@
 
-ifneq ($(call rwildcard,$(BUILDPATH_DEP)/,*.d),)
-  include $(DEP_FILES)
-endif
+# ifneq ($(call rwildcard,$(BUILDPATH_DEP)/,*.d),)
+#   include $(DEP_FILES)
+# endif

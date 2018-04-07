@@ -13,7 +13,7 @@ else
 #   $(warning CXX_INCLUDE = $(CXX_INCLUDE))
 endif
 
-CXX_FLAGS_DEP = -MM
+CXX_FLAGS_DEP = -MD -MP
 
 ifndef CXX_FLAGS_DEBUG
   CXX_FLAGS_WARN_DEBUG = -Wall -pedantic
