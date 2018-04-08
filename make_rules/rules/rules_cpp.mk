@@ -28,21 +28,23 @@ cpp_build_obj : $(OBJ_FILES)
 cpp_build_lib : cpp_build_obj
 	@echo '---> RULE' $@
 
-cpp_build_shared_lib : cpp_build_obj
+cpp_build_shared_lib : cpp_build_obj $(LANG_TARGET)
 	@echo '---> RULE' $@
 
-cpp_build_static_lib : cpp_build_obj
+cpp_build_static_lib : cpp_build_obj $(LANG_TARGET)
 	@echo '---> RULE' $@
 
-cpp_build_bin : cpp_build_obj
-	@echo '---> RULE' $@
-	$(CMP) $(OBJ_FILES) -o $(BUILDPATH_BIN)/$(NAME)
-	
+cpp_build_bin : cpp_build_obj $(LANG_TARGET)
+	@echo '---> RULE' $@ : $?
+
+ifneq ($(call rwildcard,$(BUILDPATH_DEP)/,*.d),)
+  include $(DEP_FILES)
+endif
+
 $(BUILDPATH_OBJ)/%.o : $(SOURCE_PATH)/%.cpp
-	@echo '---> RULE' $< : 
+	@echo '---> RULE' $@ : $?
 ifeq ($(CMP_TYPE),gcc)
-	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) -c $< -o $@ -MF $(BUILDPATH_DEP)/$*.d
-	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) -c $< -o $@
+	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) -MF $(BUILDPATH_DEP)/$*.d -c $< -o $@
 endif
 ifeq ($(CMP_TYPE),clang)
 endif
@@ -50,10 +52,9 @@ ifeq ($(CMP_TYPE),cl.exe)
 endif
 
 $(BUILDPATH_OBJ)/%.o : $(SOURCE_PATH)/%.cxx
-	@echo '---> RULE' $< : $@
+	@echo '---> RULE' $< : $?
 ifeq ($(CMP_TYPE),gcc)
-	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) -c $< -o $@ -MF $(BUILDPATH_DEP)/$*.d
-	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) -c $< -o $@
+	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) -MF $(BUILDPATH_DEP)/$*.d -c $< -o $@
 endif
 ifeq ($(CMP_TYPE),clang)
 endif
@@ -61,10 +62,9 @@ ifeq ($(CMP_TYPE),cl.exe)
 endif
 
 $(BUILDPATH_OBJ)/%.o : $(SOURCE_PATH)/%.cc
-	@echo '---> RULE' $< : $@
+	@echo '---> RULE' $< : $?
 ifeq ($(CMP_TYPE),gcc)
-	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) -c $< -o $@ -MF $(BUILDPATH_DEP)/$*.d
-	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) -c $< -o $@
+	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) -MF $(BUILDPATH_DEP)/$*.d -c $< -o $@
 endif
 ifeq ($(CMP_TYPE),clang)
 endif
@@ -104,7 +104,3 @@ cpp_clean_lib :
 
 cpp_clean_bin :
 	@echo '---> RULE' $@
-
-# ifneq ($(call rwildcard,$(BUILDPATH_DEP)/,*.d),)
-#   include $(DEP_FILES)
-# endif

@@ -2,6 +2,7 @@ MKDIR=mkdir -p
 
 # all
 all : build
+	@echo '---> RULE' $@ : $?
 
 # lang specific rules
 include $(MKRULES_RULES_DIR)/$(LANG_RULES)
@@ -20,7 +21,7 @@ ifdef BUILDPATH_BIN
 endif
 
 rm_dirs : $(LANG_RM_DIRS)
-	@echo '---> RULE' $@
+	@echo '---> RULE' $@ : $?
 	rm -fr $(BUILDPATH_DEP)
 	rm -fr $(BUILDPATH_OBJ)
 ifdef BUILDPATH_LIB
@@ -33,20 +34,20 @@ endif
 
 # build
 build : $(LANG_MAKE_DIRS) build_obj $(LINK_RULE)
-	@echo '---> RULE' $@
+	@echo '---> RULE' $@ : $?
 
 build_obj : $(LANG_BUILD_OBJ)
-	@echo '---> RULE' $@
+	@echo '---> RULE' $@ : $?
 
 build_lib : build_obj $(LANG_BUILD_LIB)
-	@echo '---> RULE' $@
+	@echo '---> RULE' $@ : $?
 
 build_bin : build_obj $(LANG_BUILD_BIN)
-	@echo '---> RULE' $@
+	@echo '---> RULE' $@ : $?
 
 # clean rules
 clean : rm_dirs
-	@echo '---> RULE' $@
+	@echo '---> RULE' $@ : $?
 
 # clean_deps : $(LANG_CLEAN_DEPS)
 # 	@echo '---> RULE' $@

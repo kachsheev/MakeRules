@@ -54,9 +54,9 @@ ifeq ($(CMP_TYPE),cl.exe)
 endif # ($(CMP_TYPE),cl.exe)
 
 ifeq ($(BUILD_TYPE),release)
-  CXX_FLAGS += $(CXX_FLAGS_RELEASE)
+  CXX_FLAGS +=$(CXX_FLAGS_RELEASE)
 else
-  CXX_FLAGS += $(CXX_FLAGS_DEBUG)
+  CXX_FLAGS +=$(CXX_FLAGS_DEBUG)
 endif
 
 # $(warning CXX_FLAGS = $(CXX_FLAGS))
@@ -100,10 +100,12 @@ LANG_CLEAN_OBJ = cpp_clean_obj
 ifdef BUILDPATH_LIB
   LANG_BUILD_RULE = cpp_build_lib
   LANG_CLEAN_RULE = cpp_clean_lib
+  LANG_TARGET =
 endif
 ifdef BUILDPATH_BIN
   LANG_BUILD_RULE = cpp_build_bin
   LANG_CLEAN_RULE = cpp_clean_bin
+  LANG_TARGET = $(BUILDPATH_BIN)/$(NAME)
 endif
 
 # $(warning SOURCE_LIST = $(SOURCE_LIST))

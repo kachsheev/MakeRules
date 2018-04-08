@@ -13,18 +13,17 @@ else
 #   $(warning CXX_INCLUDE = $(CXX_INCLUDE))
 endif
 
-CXX_FLAGS_DEP = -MD -MP
+CXX_FLAGS_DEP = -MMD -MP
+CXX_FLAGS_WARN = -pedantic -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default -Wextra -Wall -Winvalid-pch -Wredundant-decls -Wformat=2 -Wmissing-format-attribute -Wformat-nonliteral
 
 ifndef CXX_FLAGS_DEBUG
-  CXX_FLAGS_WARN_DEBUG = -Wall -pedantic
-  CXX_FLAGS_DEBUG = -g -O0 $(CXX_FLAGS_WARN_DEBUG)
+  CXX_FLAGS_DEBUG = -g -O0 $(CXX_FLAGS_WARN)
 #   $(warning CXX_FLAGS_DEBUG not defined)
 #   $(warning CXX_FLAGS_DEBUG = $(CXX_FLAGS_DEBUG))
 endif # CXX_FLAGS_DEBUG
 
 ifndef CXX_FLAGS_RELEASE
-  CXX_FLAGS_WARN_RELEASE = -Wall -pedantic
-  CXX_FLAGS_RELEASE = -O2 $(CXX_FLAGS_WARN_RELEASE)
+  CXX_FLAGS_RELEASE = -O2 $(CXX_FLAGS_WARN) -Werror
 #   $(warning CXX_FLAGS_RELEASE not defined)
 #   $(warning CXX_FLAGS_RELEASE = $(CXX_FLAGS_RELEASE))
 endif # CXX_FLAGS_RELEASE
