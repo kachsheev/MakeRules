@@ -13,7 +13,5 @@ LANG = cpp
 
 INCLUDE_PATHS = include
 SOURCE_PATH = src
-# SOURCE_LIST = src/TestClass.cpp \
-# 	src/main.cpp
 
 include ../make_rules/makerules.mk
