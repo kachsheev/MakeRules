@@ -42,7 +42,7 @@ CXX_FLAGS =
 # gcc
 ifeq ($(CMP_TYPE),gcc)
   include $(MKRULES_VARS_DIR)/vars_$(CMP_TYPE).mk
-  CXX_FLAGS += $(CXX_BASE_FLAGS)
+  CXX_FLAGS += $(CXX_FLAGS_BASE)
 endif # ($(CMP_TYPE),gcc)
 
 # clang
@@ -100,8 +100,45 @@ LANG_CLEAN_OBJ = cpp_clean_obj
 ifdef BUILDPATH_LIB
   LANG_BUILD_RULE = cpp_build_lib
   LANG_CLEAN_RULE = cpp_clean_lib
-  LANG_TARGET =
+  ifeq ($(LIBRARY_TYPE),static)
+    ifeq ($(CMP_TYPE),gcc)
+      LANG_TARGET := \
+        $(BUILDPATH_LIB)/lib$(NAME).a
+     endif
+    ifeq ($(CMP_TYPE),clang)
+      $(error)
+    endif
+    ifeq ($(CMP_TYPE),cl.exe)
+      $(error)
+    endif
+  endif
+  ifeq ($(LIBRARY_TYPE),shared)
+    ifeq ($(CMP_TYPE),gcc)
+      LANG_TARGET = \
+        $(BUILDPATH_LIB)/lib$(NAME).so
+     endif
+    ifeq ($(CMP_TYPE),clang)
+      $(error)
+    endif
+    ifeq ($(CMP_TYPE),cl.exe)
+      $(error)
+    endif
+  endif
+  ifeq ($(LIBRARY_TYPE),both)
+    ifeq ($(CMP_TYPE),gcc)
+      LANG_TARGET = \
+        $(BUILDPATH_LIB)/lib$(NAME).a \
+        $(BUILDPATH_LIB)/lib$(NAME).so
+     endif
+    ifeq ($(CMP_TYPE),clang)
+      $(error)
+    endif
+    ifeq ($(CMP_TYPE),cl.exe)
+      $(error)
+    endif
+  endif
 endif
+
 ifdef BUILDPATH_BIN
   LANG_BUILD_RULE = cpp_build_bin
   LANG_CLEAN_RULE = cpp_clean_bin

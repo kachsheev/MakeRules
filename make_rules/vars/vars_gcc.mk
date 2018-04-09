@@ -1,4 +1,4 @@
-CXX_BASE_FLAGS =
+CXX_FLAGS_BASE =
 
 ifndef CMP
   CMP = g++
@@ -14,7 +14,10 @@ else
 endif
 
 CXX_FLAGS_DEP = -MMD -MP
-CXX_FLAGS_WARN = -pedantic -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default -Wextra -Wall -Winvalid-pch -Wredundant-decls -Wformat=2 -Wmissing-format-attribute -Wformat-nonliteral
+CXX_FLAGS_WARN = -pedantic -Wredundant-decls -Wcast-align \
+	-Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum \
+	-Wswitch-default -Wextra -Wall -Winvalid-pch -Wredundant-decls \
+	-Wformat=2 -Wmissing-format-attribute -Wformat-nonliteral
 
 ifndef CXX_FLAGS_DEBUG
   CXX_FLAGS_DEBUG = -g -O0 $(CXX_FLAGS_WARN)
@@ -27,3 +30,15 @@ ifndef CXX_FLAGS_RELEASE
 #   $(warning CXX_FLAGS_RELEASE not defined)
 #   $(warning CXX_FLAGS_RELEASE = $(CXX_FLAGS_RELEASE))
 endif # CXX_FLAGS_RELEASE
+
+ifeq ($(BUILD_CONFIG),library)
+  ifeq ($(LIBRARY_TYPE),shared)
+    CXX_FLAGS_BASE += -fPIC
+    CXX_FLAGS_LIB = -shared
+  else
+    ifeq ($(LIBRARY_TYPE),both)
+      CXX_FLAGS_BASE += -fPIC
+      CXX_FLAGS_LIB = -shared
+    endif
+  endif
+endif
