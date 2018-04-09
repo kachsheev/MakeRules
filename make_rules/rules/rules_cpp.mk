@@ -1,7 +1,7 @@
 # common
 
 cpp_make_dirs: make_dirs
-	@echo '---> RULE' $@
+	@echo '-> RULE' $@ : $?
 ifneq ($(SRC_DEPPATHS),)
 	$(MKDIR) $(SRC_DEPPATHS)
 endif
@@ -10,7 +10,7 @@ ifneq ($(SRC_OBJPATHS),)
 endif
 
 cpp_rm_dirs:
-	@echo '---> RULE' $@
+	@echo '-> RULE' $@ : $?
 ifneq ($(SRC_DEPPATHS),)
 	rmdir $(SRC_DEPPATHS)
 endif
@@ -22,22 +22,22 @@ endif
 # build
 
 cpp_build: $(LANG_BUILD_RULE)
-	@echo '---> RULE' $@ : $?
+	@echo '-> RULE' $@ : $?
 
 cpp_build_obj : $(OBJ_FILES)
-	@echo '---> RULE' $@ : $?
+	@echo '-> RULE' $@ : $?
 
 cpp_build_lib : cpp_build_obj $(LANG_TARGET)
-	@echo '---> RULE' $@ : $?
+	@echo '-> RULE' $@ : $?
 
 cpp_build_bin : cpp_build_obj $(LANG_TARGET)
-	@echo '---> RULE' $@ : $?
+	@echo '-> RULE' $@ : $?
 
 
 # include dep files
 
 ifneq ($(call rwildcard,$(BUILDPATH_DEP)/,*.d),)
-  $(warning including $(DEP_FILES))
+#   $(warning including $(DEP_FILES))
   include $(DEP_FILES)
 endif
 
@@ -45,7 +45,7 @@ endif
 # build object files
 
 $(BUILDPATH_OBJ)/%.o : $(SOURCE_PATH)/%.cpp
-	@echo '---> RULE' $@ : $?
+	@echo '----> OBJ_DEP' $@ : $?
 ifeq ($(CMP_TYPE),gcc)
 	@$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) -MF $(BUILDPATH_DEP)/$*.d -c $< -o $@
 endif
@@ -55,9 +55,9 @@ ifeq ($(CMP_TYPE),cl.exe)
 endif
 
 $(BUILDPATH_OBJ)/%.o : $(SOURCE_PATH)/%.cxx
-	@echo '---> RULE' $@ : $?
+	@echo '----> OBJ_DEP' $@ : $?
 ifeq ($(CMP_TYPE),gcc)
-	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) -MF $(BUILDPATH_DEP)/$*.d -c $< -o $@
+	@$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) -MF $(BUILDPATH_DEP)/$*.d -c $< -o $@
 endif
 ifeq ($(CMP_TYPE),clang)
 endif
@@ -65,9 +65,9 @@ ifeq ($(CMP_TYPE),cl.exe)
 endif
 
 $(BUILDPATH_OBJ)/%.o : $(SOURCE_PATH)/%.cc
-	@echo '---> RULE' $@ : $?
+	@echo '----> OBJ_DEP' $@ : $?
 ifeq ($(CMP_TYPE),gcc)
-	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) -MF $(BUILDPATH_DEP)/$*.d -c $< -o $@
+	@$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) -MF $(BUILDPATH_DEP)/$*.d -c $< -o $@
 endif
 ifeq ($(CMP_TYPE),clang)
 endif
@@ -78,7 +78,7 @@ endif
 # build libraries
 
 $(BUILDPATH_LIB)/lib$(NAME).a : $(OBJ_FILES)
-	@echo '---> RULE' $@ : $?
+	@echo '----> STATIC_LIB' $@ : $?
 ifeq ($(CMP_TYPE),gcc)
 	@$(AR) rcs $@ $?
 endif
@@ -88,7 +88,7 @@ ifeq ($(CMP_TYPE),cl.exe)
 endif
 
 $(BUILDPATH_LIB)/lib$(NAME).so : $(OBJ_FILES)
-	@echo '---> RULE' $@ : $?
+	@echo '----> SHARED_LIB' $@ : $?
 ifeq ($(CMP_TYPE),gcc)
 	@$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) $(CXX_FLAGS_LIB) $? -o $@
 endif
@@ -98,9 +98,9 @@ ifeq ($(CMP_TYPE),cl.exe)
 endif
 
 $(BUILDPATH_BIN)/$(NAME) : $(OBJ_FILES)
-	@echo '---> RULE' $@ : $?
+	@echo '----> BINARY' $@ : $?
 ifeq ($(CMP_TYPE),gcc)
-	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) $? -o $@
+	@$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) $? -o $@
 endif
 ifeq ($(CMP_TYPE),clang)
 endif
@@ -111,20 +111,20 @@ endif
 # clean
 
 cpp_clean : cpp_clean_deps cpp_clean_obj $(LANG_CLEAN_RULE)
-	@echo '---> RULE' $@
+	@echo '-> RULE' $@ : $?
 
 cpp_clean_deps :
-	@echo '---> RULE' $@
+	@echo '-> RULE' $@
 	rm -f $(DEP_FILES)
 
 cpp_clean_obj :
-	@echo '---> RULE' $@
+	@echo '-> RULE' $@
 	rm -f $(OBJ_FILES)
 
 cpp_clean_lib :
-	@echo '---> RULE' $@
+	@echo '-> RULE' $@
 	rm -f $(LANG_TARGET)
 
 cpp_clean_bin :
-	@echo '---> RULE' $@
+	@echo '-> RULE' $@
 	rm -f $(LANG_TARGET)

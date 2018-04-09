@@ -22,7 +22,7 @@ ifndef CMP_TYPE
   # Clang
   ifeq ($(CXX),clang)
     $(warning CMP_TYPE = clang)
-    CMP_TYPE = clang
+    CMP_TYPE = clang++
     $(error $(CMP_TYPE) cannot support now.)
   endif # ($(CXX),clang)
 
@@ -41,7 +41,7 @@ CXX_FLAGS =
 
 # gcc
 ifeq ($(CMP_TYPE),gcc)
-  include $(MKRULES_VARS_DIR)/vars_$(CMP_TYPE).mk
+  include $(MKRULES_VARS_DIR)/vars_$(CMP_TYPE)_cpp.mk
   CXX_FLAGS += $(CXX_FLAGS_BASE)
 endif # ($(CMP_TYPE),gcc)
 
