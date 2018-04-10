@@ -1,4 +1,20 @@
 # -------------------- 
+# C++ standarts
+
+CPP_STANDART_98 = std98
+CPP_STANDART_03 = std03
+CPP_STANDART_11 = std11
+CPP_STANDART_14 = std14
+CPP_STANDART_17 = std17
+
+CPP_STANDARTS += \
+	$(CPP_STANDART_98) \
+	$(CPP_STANDART_03) \
+	$(CPP_STANDART_11) \
+	$(CPP_STANDART_14) \
+	$(CPP_STANDART_17)
+
+# -------------------- 
 # Check defining CXX
 
 ifndef CXX

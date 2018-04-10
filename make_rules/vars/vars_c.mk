@@ -1,17 +1,32 @@
 # -------------------- 
+# C standarts
+
+C_STANDART_89 = std89
+C_STANDART_90 = std90
+C_STANDART_99 = std99
+C_STANDART_11 = std11
+C_STANDART_17 = std17
+
+C_STANDARTS += \
+	$(C_STANDART_89) \
+	$(C_STANDART_90) \
+	$(C_STANDART_99) \
+	$(C_STANDART_11) \
+	$(C_STANDART_17)
+
+# -------------------- 
 # Check defining CC
 
 ifeq ($(CMP_TYPE),cl.exe)
   $(error cl.exe cannot suppert *.c files.)
 endif
 
-
 ifndef CC
-  $(error define 'CC' variable (gсс, clang or cl.exe))
+  $(error define 'CC' variable (gсс, clang))
 endif # CC
 
 ifeq ($(CC),)
-  $(error CC variable can be 'gcc', 'clang' or 'cl.exe')
+  $(error CC variable can be 'gcc', 'clang')
 endif # CC
 
 # -------------------- 
@@ -31,13 +46,6 @@ ifndef CMP_TYPE
     $(error $(CMP_TYPE) cannot support now.)
   endif # ($(CC),clang)
 
-  # MSVC
-  ifeq ($(CC),cl.exe)
-    $(warning CMP_TYPE = cl.exe)
-    CMP_TYPE = cl.exe
-    $(error $(CMP_TYPE) cannot support now.)
-  endif # ($(CC),clang)
-
 endif # CMP_TYPE
 
 # -------------------- 
@@ -54,9 +62,6 @@ endif # ($(CMP_TYPE),gcc)
 ifeq ($(CMP_TYPE),clang)
 endif # ($(CMP_TYPE),clang)
 
-# cl.exe
-ifeq ($(CMP_TYPE),cl.exe)
-endif # ($(CMP_TYPE),cl.exe)
 
 ifeq ($(BUILD_TYPE),release)
   CC_FLAGS +=$(CC_FLAGS_RELEASE)
@@ -105,6 +110,7 @@ LANG_CLEAN_OBJ = cpp_clean_obj
 ifdef BUILDPATH_LIB
   LANG_BUILD_RULE = cpp_build_lib
   LANG_CLEAN_RULE = cpp_clean_lib
+  
   ifeq ($(LIBRARY_TYPE),static)
     ifeq ($(CMP_TYPE),gcc)
       LANG_TARGET := \
@@ -114,6 +120,7 @@ ifdef BUILDPATH_LIB
       $(error)
     endif
   endif
+  
   ifeq ($(LIBRARY_TYPE),shared)
     ifeq ($(CMP_TYPE),gcc)
       LANG_TARGET = \
@@ -122,10 +129,8 @@ ifdef BUILDPATH_LIB
     ifeq ($(CMP_TYPE),clang)
       $(error)
     endif
-    ifeq ($(CMP_TYPE),cl.exe)
-      $(error)
-    endif
   endif
+  
   ifeq ($(LIBRARY_TYPE),both)
     ifeq ($(CMP_TYPE),gcc)
       LANG_TARGET = \
@@ -133,9 +138,6 @@ ifdef BUILDPATH_LIB
         $(BUILDPATH_LIB)/lib$(NAME).so
      endif
     ifeq ($(CMP_TYPE),clang)
-      $(error)
-    endif
-    ifeq ($(CMP_TYPE),cl.exe)
       $(error)
     endif
   endif
