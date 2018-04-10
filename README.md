@@ -7,7 +7,7 @@ Makefile scripts for C++ and C
 
 ## Supporting list
  - **Compilers:** GCC.
- - **Languages:** C++ (default compiler standart), C (not checked, default compiler standart).
+ - **Languages:** C++ (default compiler standart), C (default compiler standart).
  - **OS:** Linux, Windows (MSYS2, but not checked).
  
 ## Plans
