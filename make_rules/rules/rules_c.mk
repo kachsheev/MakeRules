@@ -36,9 +36,10 @@ c_build_bin : c_build_obj $(LANG_TARGET)
 
 # include dep files
 
-ifneq ($(call rwildcard,$(BUILDPATH_DEP)/,*.d),)
-#   $(warning including $(DEP_FILES))
-  include $(DEP_FILES)
+CC_EXIT_DEPS = $(call rwildcard,$(BUILDPATH_DEP)/,*.d)
+ifneq ($(CC_EXIT_DEPS),)
+#   $(warning $(call rwildcard,$(BUILDPATH_DEP)/,*.d))
+  include $(CC_EXIT_DEPS)
 endif
 
 
@@ -47,7 +48,7 @@ endif
 $(BUILDPATH_OBJ)/%.o : $(SOURCE_PATH)/%.c
 	@echo '----> OBJ_DEP' $@ : $?
 ifeq ($(CMP_TYPE),gcc)
-	@$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) -MF $(BUILDPATH_DEP)/$*.d -c $< -o $@
+	@$(CMP) $(CC_INCLUDE) $(CC_FLAGS) $(CC_FLAGS_DEP) -MF $(BUILDPATH_DEP)/$*.d -c $< -o $@
 endif
 ifeq ($(CMP_TYPE),clang)
 endif
@@ -66,7 +67,7 @@ endif
 $(BUILDPATH_LIB)/lib$(NAME).so : $(OBJ_FILES)
 	@echo '----> SHARED_LIB' $@ : $?
 ifeq ($(CMP_TYPE),gcc)
-	@$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) $(CXX_FLAGS_LIB) $? -o $@
+	@$(CMP) $(CC_INCLUDE) $(CC_FLAGS) $(CC_FLAGS_DEP) $(CC_FLAGS_LIB) $? -o $@
 endif
 ifeq ($(CMP_TYPE),clang)
 endif
@@ -74,7 +75,7 @@ endif
 $(BUILDPATH_BIN)/$(NAME) : $(OBJ_FILES)
 	@echo '----> BINARY' $@ : $?
 ifeq ($(CMP_TYPE),gcc)
-	$(CMP) $(CXX_INCLUDE) $(CXX_FLAGS) $(CXX_FLAGS_DEP) $? -o $@
+	@$(CMP) $(CC_INCLUDE) $(CC_FLAGS) $(CC_FLAGS_DEP) $? -o $@
 endif
 ifeq ($(CMP_TYPE),clang)
 endif

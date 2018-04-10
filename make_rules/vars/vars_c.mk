@@ -34,10 +34,10 @@ endif # CC
 ifndef CMP_TYPE
 
 # GCC
-  ifeq ($(CC),gcc)
+  ifeq ($(CC),cc)
 #     $(warning CMP_TYPE = gcc)
     CMP_TYPE = gcc
-  endif # ($(CC),g++)
+  endif # ($(CC),gcc)
 
   # Clang
   ifeq ($(CC),clang)
@@ -54,7 +54,7 @@ CC_FLAGS =
 
 # gcc
 ifeq ($(CMP_TYPE),gcc)
-  include $(MKRULES_VARS_DIR)/vars_$(CMP_TYPE)_с.mk
+  include $(MKRULES_VARS_DIR)/vars_$(CMP_TYPE)_$(LANG).mk
   CC_FLAGS += $(CC_FLAGS_BASE)
 endif # ($(CMP_TYPE),gcc)
 
@@ -78,15 +78,12 @@ ifdef SOURCE_LIST
 endif
 
 ifdef SOURCE_PATH
-SOURCE_LIST =\
-  $(call rwildcard,$(SOURCE_PATH)/, *.cpp) \
-  $(call rwildcard,$(SOURCE_PATH)/, *.cxx) \
-  $(call rwildcard,$(SOURCE_PATH)/, *.cc)
+SOURCE_LIST = $(call rwildcard,$(SOURCE_PATH)/, *.c)
 SOURCE_PATH_LIST = $(sort $(dir $(SOURCE_LIST)))
 endif
 
-DEP_FILES = $(subst $(SOURCE_PATH)/,$(BUILDPATH_DEP)/,$(filter %.d, $(SOURCE_LIST:.cpp=.d) $(SOURCE_LIST:.cxx=.d) $(SOURCE_LIST:.cc=.d)))
-OBJ_FILES = $(subst $(SOURCE_PATH)/,$(BUILDPATH_OBJ)/,$(filter %.o, $(SOURCE_LIST:.cpp=.o) $(SOURCE_LIST:.cxx=.o) $(SOURCE_LIST:.cc=.o)))
+DEP_FILES = $(subst $(SOURCE_PATH)/,$(BUILDPATH_DEP)/,$(filter %.d, $(SOURCE_LIST:.c=.d)))
+OBJ_FILES = $(subst $(SOURCE_PATH)/,$(BUILDPATH_OBJ)/,$(filter %.o, $(SOURCE_LIST:.c=.o)))
 
 DEP_PATHS = $(dir $(DEP_FILES))
 OBJ_PATHS = $(dir $(OBJ_FILES))
@@ -94,22 +91,22 @@ OBJ_PATHS = $(dir $(OBJ_FILES))
 CONCREATE_PATHS = $(sort $(DEP_PATHS) $(OBJ_PATHS))
 # $(warning CONCREATE_PATHS = $(CONCREATE_PATHS))
 
-LANG_MAKE_DIRS = cpp_make_dirs
-LANG_RM_DIRS = cpp_rm_dirs
+LANG_MAKE_DIRS = c_make_dirs
+LANG_RM_DIRS = c_rm_dirs
 
-LANG_BUILD = cpp_build
-LANG_BUILD_DEPS = cpp_build_deps
-LANG_BUILD_OBJ = cpp_build_obj
-LANG_BUILD_LIB = cpp_build_lib
-LANG_BUILD_BIN = cpp_build_bin
+LANG_BUILD = c_build
+LANG_BUILD_DEPS = c_build_deps
+LANG_BUILD_OBJ = c_build_obj
+LANG_BUILD_LIB = c_build_lib
+LANG_BUILD_BIN = c_build_bin
 
-LANG_CLEAN = cpp_clean
-LANG_CLEAN_DEPS = cpp_clean_deps
-LANG_CLEAN_OBJ = cpp_clean_obj
+LANG_CLEAN = c_clean
+LANG_CLEAN_DEPS = c_clean_deps
+LANG_CLEAN_OBJ = c_clean_obj
 
 ifdef BUILDPATH_LIB
-  LANG_BUILD_RULE = cpp_build_lib
-  LANG_CLEAN_RULE = cpp_clean_lib
+  LANG_BUILD_RULE = c_build_lib
+  LANG_CLEAN_RULE = c_clean_lib
   
   ifeq ($(LIBRARY_TYPE),static)
     ifeq ($(CMP_TYPE),gcc)
@@ -144,8 +141,8 @@ ifdef BUILDPATH_LIB
 endif
 
 ifdef BUILDPATH_BIN
-  LANG_BUILD_RULE = cpp_build_bin
-  LANG_CLEAN_RULE = cpp_clean_bin
+  LANG_BUILD_RULE = c_build_bin
+  LANG_CLEAN_RULE = c_clean_bin
   LANG_TARGET = $(BUILDPATH_BIN)/$(NAME)
 endif
 

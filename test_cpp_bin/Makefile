@@ -1,4 +1,4 @@
-NAME = test
+NAME = test_cpp_bin
 BUILDPATH = build
 BUILD_CONFIG = execute
 # BUILD_CONFIG = multibuild
