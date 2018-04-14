@@ -1,21 +1,51 @@
 # common
 
-cpp_make_dirs: make_dirs
+cpp_make_dirs: $(CONCREATE_PATHS)
 	@echo '-> RULE' $@ : $?
-ifneq ($(SRC_DEPPATHS),)
-	$(MKDIR) $(SRC_DEPPATHS)
-endif
-ifneq ($(SRC_OBJPATHS),)
-	$(MKDIR) $(SRC_OBJPATHS)
+
+
+# make dirs
+
+ifneq ($(DEP_PATHS),)
+$(DEP_PATHS):
+	@echo '-> MKDIR' $@ : $?
+	@$(MKDIR) $(DEP_PATHS)
 endif
 
-cpp_rm_dirs:
-	@echo '-> RULE' $@ : $?
-ifneq ($(SRC_DEPPATHS),)
-	rmdir $(SRC_DEPPATHS)
+ifneq ($(OBJ_PATHS),)
+$(OBJ_PATHS):
+	@echo '-> MKDIR' $@ : $?
+	@$(MKDIR) $(OBJ_PATHS)
 endif
-ifneq ($(SRC_OBJPATHS),)
-	rmdir $(SRC_OBJPATHS)
+
+ifneq ($(BIN_PATH),)
+$(BIN_PATH):
+	@echo '-> MKDIR' $@ : $?
+	@$(MKDIR) $(BIN_PATH)
+endif
+
+ifneq ($(LIB_PATH),)
+$(LIB_PATH):
+	@echo '-> MKDIR' $@ : $?
+	@$(MKDIR) $(LIB_PATH)
+endif
+
+
+# remove dirs
+
+cpp_rm_dirs: cpp_clean
+	@echo '-> RULE' $@ : $?
+ifneq ($(DEP_PATHS),)
+	@$(RM) $(DEP_PATHS)
+endif
+ifneq ($(OBJ_PATHS),)
+	@$(RM) $(OBJ_PATHS)
+endif
+ifneq ($(BIN_PATH),)
+	@$(RM) $(BIN_PATH)
+endif
+ifneq ($(LIB_PATH),)
+	@$(RM) $(LIB_PATH)
 endif
 
 
@@ -36,9 +66,9 @@ cpp_build_bin : cpp_build_obj $(LANG_TARGET)
 
 # include dep files
 
-ifneq ($(call rwildcard,$(BUILDPATH_DEP)/,*.d),)
-#   $(warning including $(DEP_FILES))
-  include $(DEP_FILES)
+EXIST_DEPS = $(call rwildcard,$(BUILDPATH_DEP)/,*.d)
+ifneq ($(EXIST_DEPS),)
+  include $(EXIST_DEPS)
 endif
 
 
@@ -115,16 +145,16 @@ cpp_clean : cpp_clean_deps cpp_clean_obj $(LANG_CLEAN_RULE)
 
 cpp_clean_deps :
 	@echo '-> RULE' $@
-	rm -f $(DEP_FILES)
+	@$(RM) $(DEP_FILES)
 
 cpp_clean_obj :
 	@echo '-> RULE' $@
-	rm -f $(OBJ_FILES)
+	@$(RM) $(OBJ_FILES)
 
 cpp_clean_lib :
 	@echo '-> RULE' $@
-	rm -f $(LANG_TARGET)
+	@$(RM) $(LANG_TARGET)
 
 cpp_clean_bin :
 	@echo '-> RULE' $@
-	rm -f $(LANG_TARGET)
+	@$(RM) $(LANG_TARGET)

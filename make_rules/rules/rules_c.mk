@@ -1,23 +1,48 @@
 # common
 
-c_make_dirs: make_dirs
-	@echo '-> RULE' $@
-ifneq ($(SRC_DEPPATHS),)
-	$(MKDIR) $(SRC_DEPPATHS)
+c_make_dirs: $(CONCREATE_PATHS)
+	@echo '-> RULE' $@ : $?
+
+
+# make dirs
+
+ifneq ($(DEP_PATHS),)
+$(DEP_PATHS):
+	@echo '-> MKDIR' $@ : $?
+	@$(MKDIR) $(DEP_PATHS)
 endif
-ifneq ($(SRC_OBJPATHS),)
-	$(MKDIR) $(SRC_OBJPATHS)
+
+ifneq ($(OBJ_PATHS),)
+$(OBJ_PATHS):
+	@echo '-> MKDIR' $@ : $?
+	@$(MKDIR) $(OBJ_PATHS)
+endif
+
+ifneq ($(BIN_PATH),)
+$(BIN_PATH):
+	@echo '-> MKDIR' $@ : $?
+	@$(MKDIR) $(BIN_PATH)
+endif
+ifneq ($(LIB_PATH),)
+$(LIB_PATH):
+	@echo '-> MKDIR' $@ : $?
+	@$(MKDIR) $(LIB_PATH)
 endif
 
 c_rm_dirs:
 	@echo '-> RULE' $@
-ifneq ($(SRC_DEPPATHS),)
-	rmdir $(SRC_DEPPATHS)
+ifneq ($(DEP_PATHS),)
+	@$(RM) $(DEP_PATHS)
 endif
-ifneq ($(SRC_OBJPATHS),)
-	rmdir $(SRC_OBJPATHS)
+ifneq ($(OBJ_PATHS),)
+	@$(RM) $(OBJ_PATHS)
 endif
-
+ifneq ($(BIN_PATH),)
+	@$(RM) $(LIB_PATH)
+endif
+ifneq ($(LIB_PATH),)
+	@$(RM) $(LIB_PATH)
+endif
 
 # build
 

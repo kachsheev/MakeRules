@@ -1,5 +1,5 @@
 MKDIR=mkdir -p
-RMDIR=rm -rf
+RM=rm -rf
 
 # all
 all : build
@@ -12,26 +12,10 @@ include $(MKRULES_RULES_DIR)/$(LANG_RULES)
 make_dirs :
 	@echo '-> RULE' $@
 	@$(MKDIR) $(BUILDPATH)
-	@$(MKDIR) $(BUILDPATH_DEP)
-	@$(MKDIR) $(BUILDPATH_OBJ)
-ifdef BUILDPATH_LIB
-	@$(MKDIR) $(BUILDPATH_LIB)
-endif
-ifdef BUILDPATH_BIN
-	@$(MKDIR) $(BUILDPATH_BIN)
-endif
 
 rm_dirs : $(LANG_RM_DIRS)
 	@echo '-> RULE' $@ : $?
-	@$(RMDIR) $(BUILDPATH_DEP)
-	@$(RMDIR) $(BUILDPATH_OBJ)
-ifdef BUILDPATH_LIB
-	@$(RMDIR) $(BUILDPATH_LIB)
-endif
-ifdef BUILDPATH_BIN
-	@$(RMDIR) $(BUILDPATH_BIN)
-endif
-	@$(RMDIR) $(BUILDPATH)
+	@$(RM) $(BUILDPATH)
 
 # build
 build : $(LANG_MAKE_DIRS) build_obj $(LINK_RULE)
@@ -40,15 +24,18 @@ build : $(LANG_MAKE_DIRS) build_obj $(LINK_RULE)
 build_obj : $(LANG_MAKE_DIRS) $(LANG_BUILD_OBJ)
 	@echo '-> RULE' $@ : $?
 
-build_lib : build_obj $(LANG_BUILD_LIB)
+build_lib : build_obj $(LANG_BUILD_RULE)
 	@echo '-> RULE' $@ : $?
 
-build_bin : build_obj $(LANG_BUILD_BIN)
+build_bin : build_obj $(LANG_BUILD_RULE)
 	@echo '-> RULE' $@ : $?
 
 # clean rules
-clean : rm_dirs
+clean : $(LANG_CLEAN_RULE) rm_dirs
 	@echo '-> RULE' $@ : $?
+
+.DEFAULT: all
+.PHONY: clean
 
 # clean_deps : $(LANG_CLEAN_DEPS)
 # 	@echo '-> RULE' $@

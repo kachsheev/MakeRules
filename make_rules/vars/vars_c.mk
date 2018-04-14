@@ -33,9 +33,9 @@ endif # CC
 # Defining CMP_TYPE == compiler
 ifndef CMP_TYPE
 
-# GCC
+  # GCC
   ifeq ($(CC),cc)
-#     $(warning CMP_TYPE = gcc)
+  #  $(warning CMP_TYPE = gcc)
     CMP_TYPE = gcc
   endif # ($(CC),gcc)
 
@@ -64,9 +64,9 @@ endif # ($(CMP_TYPE),clang)
 
 
 ifeq ($(BUILD_TYPE),release)
-  CC_FLAGS +=$(CC_FLAGS_RELEASE)
+  CC_FLAGS += $(CC_FLAGS_RELEASE)
 else
-  CC_FLAGS +=$(CC_FLAGS_DEBUG)
+  CC_FLAGS += $(CC_FLAGS_DEBUG)
 endif
 
 # $(warning CC_FLAGS = $(CC_FLAGS))
@@ -78,18 +78,15 @@ ifdef SOURCE_LIST
 endif
 
 ifdef SOURCE_PATH
-SOURCE_LIST = $(call rwildcard,$(SOURCE_PATH)/, *.c)
-SOURCE_PATH_LIST = $(sort $(dir $(SOURCE_LIST)))
+  SOURCE_LIST = $(call rwildcard,$(SOURCE_PATH)/, *.c)
+  SOURCE_PATH_LIST = $(sort $(dir $(SOURCE_LIST)))
 endif
 
 DEP_FILES = $(subst $(SOURCE_PATH)/,$(BUILDPATH_DEP)/,$(filter %.d, $(SOURCE_LIST:.c=.d)))
 OBJ_FILES = $(subst $(SOURCE_PATH)/,$(BUILDPATH_OBJ)/,$(filter %.o, $(SOURCE_LIST:.c=.o)))
 
-DEP_PATHS = $(dir $(DEP_FILES))
-OBJ_PATHS = $(dir $(OBJ_FILES))
-
-CONCREATE_PATHS = $(sort $(DEP_PATHS) $(OBJ_PATHS))
-# $(warning CONCREATE_PATHS = $(CONCREATE_PATHS))
+DEP_PATHS = $(sort $(dir $(DEP_FILES)))
+OBJ_PATHS = $(sort $(dir $(OBJ_FILES)))
 
 LANG_MAKE_DIRS = c_make_dirs
 LANG_RM_DIRS = c_rm_dirs
@@ -104,48 +101,52 @@ LANG_CLEAN = c_clean
 LANG_CLEAN_DEPS = c_clean_deps
 LANG_CLEAN_OBJ = c_clean_obj
 
+ifdef BUILDPATH_BIN
+  BIN_PATH = $(BUILDPATH_BIN)/
+  LANG_BUILD_RULE = c_build_bin
+  LANG_CLEAN_RULE = c_clean_bin
+  LANG_TARGET = $(BUILDPATH_BIN)/$(NAME)
+endif # BUILDPATH_BIN
+
 ifdef BUILDPATH_LIB
+  LIB_PATH = $(BUILDPATH_LIB)/
   LANG_BUILD_RULE = c_build_lib
   LANG_CLEAN_RULE = c_clean_lib
-  
+
+  # check static
   ifeq ($(LIBRARY_TYPE),static)
     ifeq ($(CMP_TYPE),gcc)
       LANG_TARGET := \
         $(BUILDPATH_LIB)/lib$(NAME).a
-     endif
+    endif # $(CMP_TYPE),gcc
     ifeq ($(CMP_TYPE),clang)
       $(error)
-    endif
-  endif
-  
+    endif # $(CMP_TYPE),clang
+  endif # $(LIBRARY_TYPE),static
+
+  # check shared
   ifeq ($(LIBRARY_TYPE),shared)
     ifeq ($(CMP_TYPE),gcc)
       LANG_TARGET = \
         $(BUILDPATH_LIB)/lib$(NAME).so
-     endif
+    endif # $(CMP_TYPE),gcc
     ifeq ($(CMP_TYPE),clang)
       $(error)
-    endif
-  endif
-  
+    endif # $(CMP_TYPE),clang
+  endif # $(LIBRARY_TYPE),shared
+
+  # check both
   ifeq ($(LIBRARY_TYPE),both)
     ifeq ($(CMP_TYPE),gcc)
       LANG_TARGET = \
         $(BUILDPATH_LIB)/lib$(NAME).a \
         $(BUILDPATH_LIB)/lib$(NAME).so
-     endif
+    endif # $(CMP_TYPE),gcc
     ifeq ($(CMP_TYPE),clang)
       $(error)
-    endif
-  endif
-endif
+    endif # $(CMP_TYPE),clang
+  endif # $(LIBRARY_TYPE),both
+endif # BUILDPATH_LIB
 
-ifdef BUILDPATH_BIN
-  LANG_BUILD_RULE = c_build_bin
-  LANG_CLEAN_RULE = c_clean_bin
-  LANG_TARGET = $(BUILDPATH_BIN)/$(NAME)
-endif
-
-# $(warning SOURCE_LIST = $(SOURCE_LIST))
-# $(warning DEP_FILES = $(DEP_FILES))
-# $(warning OBJ_FILES = $(OBJ_FILES))
+CONCREATE_PATHS = $(DEP_PATHS) $(OBJ_PATHS) $(BIN_PATH) $(LIB_PATH)
+$(warning CONCREATE_PATHS = $(CONCREATE_PATHS))

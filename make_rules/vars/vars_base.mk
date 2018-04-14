@@ -44,12 +44,12 @@ ifneq ($(BUILD_CONFIG),multibuild)
   endif
 endif
 
-ifeq ($(BUILD_CONFIG),multibuild)
-  BUILDPATH_LIB = $(BUILDPATH)/lib
+ifeq ($(BUILD_CONFIG),execute)
   BUILDPATH_BIN = $(BUILDPATH)/bin
-  BUILDPATH_LIST += $(BUILDPATH_BIN) $(BUILDPATH_LIB)
-  $(error 'multibuild' cannot support now)
-endif
+  BUILDPATH_LIST += $(BUILDPATH_BIN)
+  LINK_RULE = build_bin
+  CLEAN_RULE = clean_bin
+endif # ($(BUILD_CONFIG),execute)
 
 ifeq ($(BUILD_CONFIG),library)
   BUILDPATH_LIB = $(BUILDPATH)/lib
@@ -58,12 +58,12 @@ ifeq ($(BUILD_CONFIG),library)
   CLEAN_RULE = clean_lib
 endif # ($(BUILD_CONFIG),library)
 
-ifeq ($(BUILD_CONFIG),execute)
+ifeq ($(BUILD_CONFIG),multibuild)
+  BUILDPATH_LIB = $(BUILDPATH)/lib
   BUILDPATH_BIN = $(BUILDPATH)/bin
-  BUILDPATH_LIST += $(BUILDPATH_BIN)
-  LINK_RULE = build_bin
-  CLEAN_RULE = clean_bin
-endif # ($(BUILD_CONFIG),execute)
+  BUILDPATH_LIST += $(BUILDPATH_BIN) $(BUILDPATH_LIB)
+  $(error 'multibuild' cannot support now)
+endif
 
 # -------------------- 
 # Check defining BUILD_TYPE
