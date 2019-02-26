@@ -1,18 +1,27 @@
 # C++ standarts
 
-CPP_STANDART_98 := c++98
-CPP_STANDART_03 := c++03
-CPP_STANDART_11 := c++11
-CPP_STANDART_14 := c++14
-CPP_STANDART_17 := c++17
+CXX_STANDART_98 := c++98
+CXX_STANDART_03 := c++03
+CXX_STANDART_0x := c++0x
+CXX_STANDART_11 := c++11
+CXX_STANDART_1y := c++1y
+CXX_STANDART_14 := c++14
+CXX_STANDART_1z := c++1z
+CXX_STANDART_17 := c++17
+CXX_STANDART_2a := c++2a
+CXX_STANDART_20 := c++20
 
-CPP_STANDARTS += \
-	$(CPP_STANDART_98) \
-	$(CPP_STANDART_03) \
-	$(CPP_STANDART_11) \
-	$(CPP_STANDART_14) \
-	$(CPP_STANDART_17)
-
+CXX_STANDART_LIST += \
+  $(CXX_STANDART_98) \
+  $(CXX_STANDART_03) \
+  $(CXX_STANDART_0x) \
+  $(CXX_STANDART_11) \
+  $(CXX_STANDART_1y) \
+  $(CXX_STANDART_14) \
+  $(CXX_STANDART_1z) \
+  $(CXX_STANDART_17) \
+  $(CXX_STANDART_2a) \
+  $(CXX_STANDART_20)
 
 # Check defining CXX
 
@@ -22,7 +31,7 @@ endif # CXX
 
 ifeq ($(CXX),)
   $(error CXX variable can be 'g++', 'clang' or 'cl.exe')
-endif # CXX
+endif # ($(CXX),)
 
 
 # Defining CMP_TYPE == compiler
