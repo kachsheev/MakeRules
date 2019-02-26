@@ -8,6 +8,12 @@
 	@echo "    SOURCE_PATH                 - "
 	@echo "    INSTALL_PATH                - ?"
 	@echo
+	@echo Logging:
+	@echo "    LOG_VARS                    - ? 'true' or 'false'                "
+	@echo "    LOG_RULES                   - ? 'true' or 'false'                "
+	@echo "    LOG_COMMANDS                - ? 'true' or 'false'                "
+	@echo "    LOG_ALL                     - ? 'true' or 'false'                "
+	@echo
 	@echo Base language properties:
 	@echo "    LANG                        - 'c', 'cpp'"
 	@echo
