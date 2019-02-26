@@ -5,6 +5,8 @@ RM := rm -rf
 all : build
 	@echo '-> RULE' $@ : $?
 
+include $(MKRULES_RULES_DIR)/rules_help.mk
+
 # lang specific rules
 
 include $(MKRULES_RULES_DIR)/$(LANG_RULES)
