@@ -16,11 +16,15 @@
 	@echo "    INCLUDE_PATHS               - "
 	@echo "    CC_FLAGS                    - "
 	@echo "    C_STANDART                  - ?"
+	@echo "    INSTALL_HEADER_PATH         - ?"
+	@echo "    INSTALL_HEADER_LIST         - ?"
 	@echo
 	@echo C++ language properties:
 	@echo "    CMP_TYPE                    - 'gcc', 'clang' or 'cl.exe'          "
 	@echo "    INCLUDE_PATHS               - "
 	@echo "    CXX_FLAGS                   - "
 	@echo "    CXX_STANDART                - ?"
+	@echo "    INSTALL_HEADER_PATH         - ?"
+	@echo "    INSTALL_HEADER_LIST         - ?"
 
 
